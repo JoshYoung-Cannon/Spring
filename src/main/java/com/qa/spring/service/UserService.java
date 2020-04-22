@@ -1,7 +1,6 @@
 package com.qa.spring.service;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -17,11 +16,16 @@ public class UserService {
 
 	private UserRepo repo;
 
+	private AccountNumberService numberService;
+	private PrizeCheckerService prizeService;
+	
 	private ModelMapper mapper;
 
-	public UserService(UserRepo repo, ModelMapper mapper) {
+	public UserService(UserRepo repo, AccountNumberService numberService, PrizeCheckerService prizeService, ModelMapper mapper) {
 		super();
 		this.repo = repo;
+		this.numberService = numberService;
+		this.prizeService = prizeService;
 		this.mapper = mapper;
 	}
 
@@ -29,19 +33,9 @@ public class UserService {
 		return this.mapper.map(user, UserDTO.class);
 	}
 
-	public String generateNumber(int numLength) {
-		String number = "";
-		Random rnd = null;
-		for (int i = 0; i < numLength; i++) {
-			rnd = new Random();
-			number = number + (char) (rnd.nextInt(26) + 'a');
-		}
-		return number;
-	}
-
 	public UserDTO add(User user, Integer numLength) {
 		if (numLength != null) {
-			user.setAccountNumber(generateNumber(numLength));
+			user.setAccountNumber(this.numberService.generateNumber(numLength));
 		}
 		this.repo.save(user);
 		return mapToDTO(user);
@@ -67,15 +61,13 @@ public class UserService {
 		return mapToDTO(foundUser);
 	}
 	
-	public UserDTO newAccountNumber(Long id, int numLength) {
-		User foundUser = getById(id);
-		foundUser.setAccountNumber(generateNumber(numLength));
-		this.repo.save(foundUser);
-		return mapToDTO(foundUser);
-	}
-	
 	public boolean delete(Long id) {
 		this.repo.deleteById(id);
 		return !this.repo.existsById(id);
+	}
+	
+	public String prizeResult(Long id) {
+		User foundUser = getById(id);
+		return foundUser.getForename() + " " + foundUser.getSurname() + " You Have Won " + this.prizeService.getPrizeResult(foundUser.getAccountNumber());
 	}
 }

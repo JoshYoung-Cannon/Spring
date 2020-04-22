@@ -55,13 +55,13 @@ public class UserController {
 		return this.service.update(user.getForename(), user.getSurname(), id);
 	}
 	
-	@PutMapping("/{id}/new-account-number/{numLength}")
-	public UserDTO generateNewAccountNumber(@PathVariable Long id, @PathVariable int numLength) {
-		return this.service.newAccountNumber(id, numLength);
-	}
-	
 	@DeleteMapping("/del/{id}")
 	public boolean delete(@PathVariable Long id) {
 		return this.service.delete(id);
+	}
+	
+	@GetMapping("/prize/{id}")
+	public String prize(@PathVariable Long id) {
+		return this.service.prizeResult(id);
 	}
 }
