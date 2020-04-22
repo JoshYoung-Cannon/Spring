@@ -31,23 +31,33 @@ public class UserController {
 		this.mapper = mapper;
 	}
 	
-	private User mapToUser(UserDTO userDTO) {
-		return this.mapper.map(userDTO, User.class);
+	private User updateToUser(UserUpdateDTO updateDTO) {
+		return this.mapper.map(updateDTO, User.class);
 	}
 	
-	@PostMapping("/add")
-	public UserDTO add(@RequestBody UserDTO user) {
-		return this.service.add(mapToUser(user));
+	@PostMapping("/add/{numLength}")
+	public UserDTO add(@RequestBody UserUpdateDTO user, @PathVariable int numLength) {
+		return this.service.add(updateToUser(user), numLength);
 	}
 	
-	@GetMapping("/get")
+	@GetMapping("/")
 	public List<UserDTO> getAll(){
 		return this.service.getAll();
+	}
+	
+	@GetMapping("/{id}")
+	public UserDTO getById(@PathVariable Long id){
+		return this.service.getDTOById(id);
 	}
 	
 	@PutMapping("/put/{id}")
 	public UserDTO update(@RequestBody UserUpdateDTO user, @PathVariable Long id) {
 		return this.service.update(user.getForename(), user.getSurname(), id);
+	}
+	
+	@PutMapping("/{id}/new-account-number/{numLength}")
+	public UserDTO generateNewAccountNumber(@PathVariable Long id, @PathVariable int numLength) {
+		return this.service.newAccountNumber(id, numLength);
 	}
 	
 	@DeleteMapping("/del/{id}")

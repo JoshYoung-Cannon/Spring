@@ -15,6 +15,8 @@ public class User {
 	
 	private String surname;
 
+	private String accountNumber;
+	
 	public User() {
 		super();
 	}
@@ -30,6 +32,14 @@ public class User {
 		this.id = id;
 		this.forename = forename;
 		this.surname = surname;
+	}
+
+	public User(Long id, String forename, String surname, String accountNumber) {
+		super();
+		this.id = id;
+		this.forename = forename;
+		this.surname = surname;
+		this.accountNumber = accountNumber;
 	}
 
 	public Long getId() {
@@ -54,6 +64,14 @@ public class User {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 	
 }
